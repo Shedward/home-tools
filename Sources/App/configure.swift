@@ -14,6 +14,12 @@ public func configure(_ app: Application) async throws {
 
     app.views.use(.leaf)
 
+    let services = Services(app: app)
+    app.setServices(services)
+
     // register routes
-    try routes(app)
+    for tool in tools(app) {
+        await services.toolsList.register(tool)
+        try app.register(collection: tool)
+    }
 }

@@ -7,14 +7,11 @@ let package = Package(
        .macOS(.v13)
     ],
     dependencies: [
-        // 💧 A server-side Swift web framework.
         .package(url: "https://github.com/vapor/vapor.git", from: "4.89.0"),
-        // 🗄 An ORM for SQL and NoSQL databases.
         .package(url: "https://github.com/vapor/fluent.git", from: "4.8.0"),
-        // 🪶 Fluent driver for SQLite.
         .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.0.0"),
-        // 🍃 An expressive, performant, and extensible templating language built for Swift.
         .package(url: "https://github.com/vapor/leaf.git", from: "4.2.4"),
+        .package(url: "https://github.com/orlandos-nl/Citadel.git", branch: "0.7.1")
     ],
     targets: [
         .executableTarget(
@@ -24,6 +21,7 @@ let package = Package(
                 .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
                 .product(name: "Leaf", package: "leaf"),
                 .product(name: "Vapor", package: "vapor"),
+                .product(name: "Citadel", package: "citadel")
             ]
         ),
         .testTarget(name: "AppTests", dependencies: [
