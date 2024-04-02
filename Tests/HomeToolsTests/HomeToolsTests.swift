@@ -1,4 +1,4 @@
-@testable import App
+@testable import HomeTools 
 import XCTVapor
 
 final class HomeToolsTests: XCTestCase {
