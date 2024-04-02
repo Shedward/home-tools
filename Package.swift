@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "home-service",
+    name: "home-tools",
     platforms: [
        .macOS(.v13)
     ],
@@ -15,7 +15,7 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "App",
+            name: "HomeTools",
             dependencies: [
                 .product(name: "Fluent", package: "fluent"),
                 .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
@@ -24,8 +24,8 @@ let package = Package(
                 .product(name: "Citadel", package: "citadel")
             ]
         ),
-        .testTarget(name: "AppTests", dependencies: [
-            .target(name: "App"),
+        .testTarget(name: "HomeToolsTests", dependencies: [
+            .target(name: "HomeTools"),
             .product(name: "XCTVapor", package: "vapor"),
 
             // Workaround for https://github.com/apple/swift-package-manager/issues/6940
