@@ -26,7 +26,7 @@ jobs:
         swift-version: "5.10"
 
     - name: Release Build
-      run: swift build -c release -Xswiftc -static-executable
+      run: swift build -c release -Xswiftc -static-executable -Xswiftc -static-stdlib
 
     - name: Make Package
       run: Scripts/MakeReleasePackage.sh
