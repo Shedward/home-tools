@@ -1,0 +1,14 @@
+<html lang="en">
+  <head>
+    <title>Echo.home</title>
+    #extend("common_header")
+  </head>
+  <body>
+      <main>
+          <h1>Echo.home</h1>
+          
+          <h2>Headers</h2>
+          <code>#(headers)</code>
+      </main>
+  </body>
+</html>

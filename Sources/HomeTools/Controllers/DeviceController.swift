@@ -15,7 +15,7 @@ struct DeviceController: ToolController {
     }
     
     func index(req: Request) async throws -> View {
-        let ipAddress = req.remoteAddress?.ipAddress ?? "Unknown"
+        let ipAddress = req.headers["X-Real-IP"].first ?? req.remoteAddress?.ipAddress ?? "Unknown"
         return try await req.view.render("device", ["ip": ipAddress])
     }
 }
