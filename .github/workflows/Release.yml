@@ -26,7 +26,11 @@ jobs:
         swift-version: "5.10"
 
     - name: Release Build
+<<<<<<< Updated upstream
       run: swift build -c release -Xswiftc -static-executable -Xswiftc -static-stdlib
+=======
+      run: swift build -c release
+>>>>>>> Stashed changes
 
     - name: Make Package
       run: Scripts/MakeReleasePackage.sh
