@@ -4,9 +4,9 @@ import Vapor
 struct EchoController: ToolController {
 
     let tool = Tool(
-        name: "Echo.home", 
+        name: "Echo", 
         url: "/echo", 
-        description: "Information and services for your current device",
+        description: "Тестовый запрос",
         isPrivate: true
     )
 

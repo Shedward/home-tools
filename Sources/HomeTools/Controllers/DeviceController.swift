@@ -4,9 +4,9 @@ import Vapor
 struct DeviceController: ToolController {
 
     let tool = Tool(
-        name: "Device.home", 
+        name: "Device", 
         url: "/device", 
-        description: "Information and services for your current device"
+        description: "Информация о подключенном устройстве"
     )
 
     func boot(routes: any RoutesBuilder) throws {

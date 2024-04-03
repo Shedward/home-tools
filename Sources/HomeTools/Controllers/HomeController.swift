@@ -6,7 +6,7 @@ struct HomeController: ToolController {
   let tool = Tool(
     name: "Home.home", 
     url: "/", 
-    description: "Home page",
+    description: "Начальная страница",
     isPrivate: true
   )
 

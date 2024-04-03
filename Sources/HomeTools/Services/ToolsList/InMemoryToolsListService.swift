@@ -6,6 +6,10 @@ actor InMemoryToolsListService: ToolsListService {
     registeredTools.append(toolController.tool)
   }
 
+  func register(_ tool: Tool) {
+    registeredTools.append(tool)
+  }
+
   func tools() async -> [Tool] {
     registeredTools
   }

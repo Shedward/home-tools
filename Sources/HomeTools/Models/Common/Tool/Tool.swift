@@ -7,13 +7,13 @@ struct Tool: Codable {
   var isPrivate: Bool
 
   init(
-    id: String = #fileID, 
+    id: String? = nil, 
     name: String, 
     url: String, 
     description: String,
     isPrivate: Bool = false
   ) {
-    self.id = id
+    self.id = id ?? name
     self.name = name
     self.url = url
     self.description = description

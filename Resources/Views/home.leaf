@@ -6,7 +6,6 @@
   <body>
       <main>
           <h1>Home.home</h1>
-          <p>Available tools in this home</p>
           <dl>
             #for(tool in tools):
             <dt><a href="#(tool.url)">#(tool.name)</a></dt>

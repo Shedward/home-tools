@@ -18,8 +18,13 @@ public func configure(_ app: Application) async throws {
     app.setServices(services)
 
     // register routes
-    for tool in tools(app) {
+    for toolController in toolControllers(app) {
+        await services.toolsList.register(toolController)
+        try app.register(collection: toolController)
+    }
+
+    // static services
+    for tool in tools() {
         await services.toolsList.register(tool)
-        try app.register(collection: tool)
     }
 }
