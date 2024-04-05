@@ -1,0 +1,26 @@
+<html lang="en">
+  <head>
+    <title>Home.home</title>
+    #extend("common_header")
+  </head>
+  <body>
+      <main>
+          <h1>VPN</h1>
+          <h2>Address List</h2>
+          <table>
+            <tr>
+              <th>List</th>
+              <th>Address</th>
+              <th>Comment</th>
+            </tr>
+            #for(item in items):
+            <tr>
+              <td>#(item.list)</td>
+              <td>#(item.address)</td>
+              <td>#(item.comment)</td>
+            </tr>
+            #endfor
+          </table>
+      </main>
+  </body>
+</html>

@@ -14,7 +14,7 @@ public func configure(_ app: Application) async throws {
 
     app.views.use(.leaf)
 
-    let services = Services(app: app)
+    let services = try Services(app: app)
     app.setServices(services)
 
     // register routes

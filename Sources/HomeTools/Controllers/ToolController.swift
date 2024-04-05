@@ -2,5 +2,5 @@
 import Vapor
 
 protocol ToolController: RouteCollection {
-  var tool: Tool { get }
+    var tool: Tool { get }
 }

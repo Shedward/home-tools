@@ -4,6 +4,7 @@ import Vapor
 func toolControllers(_ app: Application) -> [any RouteCollection & ToolController] {
     [
         HomeController(),
+        VpnController(),
         DeviceController(),
         EchoController(),
     ]
