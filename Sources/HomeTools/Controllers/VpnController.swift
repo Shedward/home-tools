@@ -15,7 +15,18 @@ struct VpnController: ToolController {
     }
     
     func index(req: Request) async throws -> View {
-        let addressListItems = try await req.services.router.addressListItems()
-        return try await req.view.render("vpn", ["items": addressListItems])
+        let sources = try await req.services.router
+            .addressList("to_vpn_source")
+            .items()
+
+        let destinations = try await req.services.router
+            .addressList("to_vpn_destination")
+            .items()
+        return try await req.view.render(
+            "vpn", [
+                "sources": sources,
+                "destinations": destinations
+            ]
+        )
     }
 }

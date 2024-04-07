@@ -5,19 +5,68 @@
   </head>
   <body>
       <main>
-          <h1>VPN</h1>
-          <h2>Address List</h2>
+          <h1><a href="/">Home</a> - VPN</h1>
+
+          <h2>Статус VPN</h2>
+          <dl class="horizontal">
+            <dt>Подключение</dt>
+            <dd>Включен</dd>
+            <dt>Локация</dt>
+            <dd>🇫🇮 Финляндия</dd>
+            <dt>Протокол</dt>
+            <dd>Wireguard</dd>
+          </dl>
+
+          <h2>Устройства под VPN</h2>
           <table>
             <tr>
-              <th>List</th>
-              <th>Address</th>
-              <th>Comment</th>
+              <td></td>
+              <td><input type="text"/></td>
+              <td><input type="text"/></td>
+              <td>
+                <div class="button small">+</div>
+              </td>
             </tr>
-            #for(item in items):
+
+            #for(source in sources):
             <tr>
-              <td>#(item.list)</td>
-              <td>#(item.address)</td>
-              <td>#(item.comment)</td>
+              <td>
+                [0|N|*]
+              </td>
+              <td>#(source.comment)</td>
+              <td>#(source.address)</td>
+              <td>
+                <div class="button small">-</div>
+              </td>
+            </tr>
+            #endfor
+          </table>
+
+          <h2>Адреса уходящие под VPN</h2>
+          <table>
+            <tr>
+              <td></td>
+              <td>
+                <input type="text"/>
+              </td>
+              <td>
+                <input type="text"/>
+              </td>
+              <td>
+                <div class="button small">+</div>
+              </td>
+            </tr>
+
+            #for(destination in destinations):
+            <tr>
+              <td>
+                <div>✅</div>
+              </td>
+              <td>#(destination.address)</td>
+              <td>#(destination.comment)</td>
+              <td>
+                <div class="button small">-</div>
+              </td>
             </tr>
             #endfor
           </table>

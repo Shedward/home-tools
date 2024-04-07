@@ -6,16 +6,26 @@ import Vapor
 
 // configures your application
 public func configure(_ app: Application) async throws {
-    
-    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
-    app.databases.use(DatabaseConfigurationFactory.sqlite(.memory), as: .sqlite)
 
-    try await app.autoMigrate()
+    guard let configPath = Environment.get("HOME_TOOLS_CONFIG_PATH") else {
+        throw InternalError("Config path not found in environment at HOME_TOOLS_CONFIG_PATH")
+    }
+
+    let data = try Data(contentsOf: URL(filePath: configPath))
+    let configs = try JSONDecoder().decode(Configs.self, from: data)
+
+    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    app.databases.use(.sqlite(.file(configs.dbFile)), as: .sqlite)
+
+    let services = try Services(app: app, configs: configs)
+    app.setServices(services)
 
     app.views.use(.leaf)
 
-    let services = try Services(app: app)
-    app.setServices(services)
+    // register migrations 
+    for migration in migrations() {
+        app.migrations.add(migration)
+    }
 
     // register routes
     for toolController in toolControllers(app) {

@@ -7,23 +7,19 @@ class Services {
     let configs: Configs
     let toolsList: ToolsListService
     let router: RouterService
+    let devices: DeviceService
     
-    init(app: Application) throws {
-
-        guard let configPath = Environment.get("HOME_TOOLS_CONFIG_PATH") else {
-            throw InternalError("Config path not found in environment at HOME_TOOLS_CONFIG_PATH")
-        }
-
-        let data = try Data(contentsOf: URL(filePath: configPath))
-        self.configs = try JSONDecoder().decode(Configs.self, from: data)
-
+    init(app: Application, configs: Configs) throws {
         self.app = app
-        self.toolsList = InMemoryToolsListService()
+        self.configs = configs
+        self.toolsList = ToolsListService()
         self.router = RouterService(
             host: configs.routerHost,
             credentials: configs.routerCredentials,
             client: app.client
         )
+
+        self.devices = DeviceService(db: app.db)
     }
 }
 

@@ -2,15 +2,112 @@
   <head>
     <title>Home.home</title>
     #extend("common_header")
+    <script>
+      function onLoad() {
+        const form = document.getElementById("register-form");
+  
+        if (!form) {
+          return;
+        }
+  
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          registerDevice();
+        });
+      }
+
+      async function registerDevice() {
+        let name = document.getElementById("register-form-name").value;
+        let address = document.getElementById("register-form-address").value;
+        let response = await fetch(
+          "/api/device",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ 
+              "name": name,
+              "address": address
+            })
+          }
+        );
+        location.reload();
+      }
+
+      async function deleteDevice(id) {
+        let response = await fetch(
+          "/api/device?" + new URLSearchParams({ "id": id }),
+          {
+            method: "DELETE"
+          }
+        );
+        location.reload();
+      }
+    </script>
   </head>
-  <body>
+  <body onLoad="onLoad()">
       <main>
-          <h1>Device.home</h1>
-          <h2>Status</h2>
-          <dl>
-            <dt>IP Address</dt>
+        <h1><a href="/">Home</a> - Device</h1>
+        <h2>Это устройство</h2>
+
+        <dl class="horizontal">
+        #if(currentDevice):
+            <dt>Название</dt>
+            <dd>#(currentDevice.name)</dd>
+            <dt>IP адрес</dt>
+            <dd>#(currentDevice.address)</dd>
+            #if(currentDevice.mac):
+              <dt>MAC адрес</dt>
+              <dd>#(currentDevice.mac)</dd>
+            #endif
+            <dt>Добавлено</dt>
+            <dd>#date(currentDevice.createdAt)</dd>
+        #else:
+            <dt>IP адрес</dt>
             <dd>#(ip)</dd>
-          </dl>
+            <dt>Добавлено</dt>
+            <dd><mark>Не добавлено</mark></dd>
+        #endif
+        </dl>
+
+        <h2> Все устройства </h2>
+
+        <form id="register-form">
+            <table class="main-form">
+              <tr>
+                <td>Название</td>
+                <td>
+                  <input id="register-form-name" type="text" style="width: 100%"/>
+                </td>
+              </tr>
+              <tr>
+                <td>IP адрес</td>
+                <td>
+                  <input id="register-form-address" type="text" value="#(ip)" style="width: 100%"/>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button type="submit" class="button main" style="float:right">
+                    Добавить
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </form>
+
+        <table>
+          #for(device in allDevices):
+            <tr>
+              <td>#(device.name)</td>
+              <td>#(device.address)</td>
+              <td style="width: 24px">
+                <div class="button small" onClick="deleteDevice('#(device.id)')">-</div>
+              </td>
+            </tr>
+          #endfor
+        </table>
       </main>
   </body>
 </html>

@@ -10,7 +10,7 @@ struct RouterCredentials: Codable {
     }
 }
 
-struct RouterService {
+final class RouterService {
     private let host: String
     private let client: Client
     private let credentials: RouterCredentials
