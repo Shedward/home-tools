@@ -11,7 +11,7 @@ public func configure(_ app: Application) async throws {
         throw InternalError("Config path not found in environment at HOME_TOOLS_CONFIG_PATH")
     }
 
-    let data = try Data(contentsOf: URL(filePath: configPath))
+    let data = try Data(contentsOf: URL(fileURLWithPath: configPath))
     let configs = try JSONDecoder().decode(Configs.self, from: data)
 
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
