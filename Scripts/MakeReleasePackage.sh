@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BUILD_PATH=".build/release"
+BUILD_PATH=".build/debug"
 
 PACKAGE_PATH="${BUILD_PATH}/Package"
 
