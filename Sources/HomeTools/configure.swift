@@ -22,7 +22,7 @@ public func configure(_ app: Application) async throws {
 
     app.views.use(.leaf)
 
-    // register migrations 
+    // register migrations
     for migration in migrations() {
         app.migrations.add(migration)
     }

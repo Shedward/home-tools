@@ -4,8 +4,8 @@ import Vapor
 struct DeviceController: ToolController {
 
     let tool = Tool(
-        name: "Device", 
-        url: "/device", 
+        name: "Device",
+        url: "/device",
         description: "Информация о подключенном устройстве"
     )
 
@@ -23,7 +23,7 @@ struct DeviceController: ToolController {
         let currentDevice: Device?
         let allDevices: [Device]
     }
-    
+
     func index(req: Request) async throws -> View {
         let ipAddress = req.headers["X-Real-IP"].first ?? req.remoteAddress?.ipAddress ?? "Unknown"
         let currentDevice = try await req.services.devices.device(address: ipAddress)
@@ -52,7 +52,7 @@ extension DeviceController {
     }
 
     func apiDelete(req: Request) async throws -> DeleteResponse {
-        guard 
+        guard
             let idString: String = req.query["id"],
             let id = UUID(uuidString: idString)
         else {

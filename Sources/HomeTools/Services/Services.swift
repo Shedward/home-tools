@@ -3,12 +3,12 @@ import Vapor
 
 class Services {
     private let app: Application
-    
+
     let configs: Configs
     let toolsList: ToolsListService
     let router: RouterService
     let devices: DeviceService
-    
+
     init(app: Application, configs: Configs) throws {
         self.app = app
         self.configs = configs
@@ -36,7 +36,7 @@ extension Application {
             return services
         }
     }
-    
+
     @discardableResult
     func setServices(_ services: Services) -> Self {
         storage[ServicesStorageKey.self] = services

@@ -20,7 +20,7 @@ final class RouterService {
         self.credentials = credentials
         self.host = host
     }
-
+    
     func request(_ path: String, beforeSend: (inout ClientRequest) throws -> () = { _ in }) async throws -> ClientResponse {
         try await client.get("http://\(host)/rest\(path)") { request in
             try beforeSend(&request)

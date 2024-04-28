@@ -13,7 +13,7 @@ struct VpnController: ToolController {
         let device = routes.grouped("vpn")
         device.get(use: index)
     }
-    
+
     func index(req: Request) async throws -> View {
         let sources = try await req.services.router
             .addressList("to_vpn_source")
@@ -22,6 +22,7 @@ struct VpnController: ToolController {
         let destinations = try await req.services.router
             .addressList("to_vpn_destination")
             .items()
+
         return try await req.view.render(
             "vpn", [
                 "sources": sources,
