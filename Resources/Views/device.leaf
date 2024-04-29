@@ -2,51 +2,51 @@
   <head>
     <title>Home.home</title>
     #extend("common_header")
-    <script>
-      function onLoad() {
-        const form = document.getElementById("register-form");
-  
-        if (!form) {
-          return;
-        }
-  
-        form.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          registerDevice();
-        });
-      }
 
-      async function registerDevice() {
-        let name = document.getElementById("register-form-name").value;
-        let address = document.getElementById("register-form-address").value;
-        let response = await fetch(
-          "/api/device",
-          {
+    <script type="module">
+      import { a } from '/scripts/main.js';
+
+      window.app = a.app({
+        onLoad: (app) => {
+          a.form("register-form").onSubmit(app.registerDevice);
+        },
+
+        registerDevice: async (form) => {
+          let name = form.field("name");
+          let address = form.field("address");
+
+          let response = await a.fetch("/api/device", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ 
-              "name": name,
-              "address": address
-            })
-          }
-        );
-        location.reload();
-      }
+            body: {
+              name: name,
+              address: address
+            }
+          });
 
-      async function deleteDevice(id) {
-        let response = await fetch(
-          "/api/device?" + new URLSearchParams({ "id": id }),
-          {
+          let newDevice = await response.json();
+
+          a.table("all-devices-table").prependRow(
+            newDevice.id, 
+            `<td>${newDevice.name}</td>
+            <td>${newDevice.address}</td>
+            <td style="width: 24px">
+              <div class="button small" onClick="app.deleteDevice('${newDevice.id}')">-</div>
+            </td>`
+          );
+        },
+
+        deleteDevice: async (id) => {
+          let response = await a.fetch("/api/device", {
+            query: { id: id },
             method: "DELETE"
-          }
-        );
-        location.reload();
-      }
+          });
+
+          a.table("all-devices-table").deleteRow(id);
+        }
+      });
     </script>
   </head>
-  <body onLoad="onLoad()">
+  <body>
       <main>
         <h1><a href="/">Home</a> - Device</h1>
         <h2>Это устройство</h2>
@@ -78,13 +78,13 @@
               <tr>
                 <td>Название</td>
                 <td>
-                  <input id="register-form-name" type="text" style="width: 100%"/>
+                  <input a.field="name" type="text" style="width: 100%"/>
                 </td>
               </tr>
               <tr>
                 <td>IP адрес</td>
                 <td>
-                  <input id="register-form-address" type="text" value="#(ip)" style="width: 100%"/>
+                  <input a.field="address" type="text" value="#(ip)" style="width: 100%"/>
                 </td>
               </tr>
               <tr>
@@ -97,13 +97,13 @@
             </table>
           </form>
 
-        <table>
+        <table id="all-devices-table">
           #for(device in allDevices):
-            <tr>
+            <tr a.id="#(device.id)">
               <td>#(device.name)</td>
               <td>#(device.address)</td>
               <td style="width: 24px">
-                <div class="button small" onClick="deleteDevice('#(device.id)')">-</div>
+                <div class="button small" onClick="app.deleteDevice('#(device.id)')">-</div>
               </td>
             </tr>
           #endfor

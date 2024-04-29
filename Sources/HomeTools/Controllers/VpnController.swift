@@ -14,6 +14,11 @@ struct VpnController: ToolController {
         device.get(use: index)
     }
 
+    struct IndexContent: Encodable {
+        let sources: [RouterService.AddressListItem]
+        let destinations: [RouterService.AddressListItem]
+    }
+
     func index(req: Request) async throws -> View {
         let sources = try await req.services.router
             .addressList("to_vpn_source")
@@ -24,10 +29,8 @@ struct VpnController: ToolController {
             .items()
 
         return try await req.view.render(
-            "vpn", [
-                "sources": sources,
-                "destinations": destinations
-            ]
+            "vpn",
+            IndexContent(sources: sources, destinations: destinations)
         )
     }
 }
