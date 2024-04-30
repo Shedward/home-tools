@@ -1,5 +1,5 @@
 
-import { a_element_selector, a_remove_node, a_css_query } from "./tools.js";
+import { a_element_selector, a_remove_node, a_css_query, a_clean_node } from "./tools.js";
 
 function renderRow(id, value) {
   var tr = document.createElement("tr");
@@ -18,6 +18,22 @@ function renderRow(id, value) {
   return tr;
 }
 
+function fillTable(table, data) {
+  if (data !== undefined && data.forEach) {
+    data.forEach((item) => {
+      var [id, rowData] = item;
+      if (id === undefined) {
+        throw new Error(`Item ${item} does not contains id at first position`);
+      }
+      if (rowData === undefined) {
+        throw new Error(`Item ${item} does not contains value at second position`);
+      }
+      const row = renderRow(id, rowData);
+      table.append(row);
+    });
+  }
+}
+
 function a_table(id) {
 
   const tableElem = a_element_selector("Table", id)
@@ -33,8 +49,20 @@ function a_table(id) {
     },
     deleteRow: (id) => {
       tableElem().querySelectorAll(a_css_query`[a\\.id=${id}]`).forEach(a_remove_node);
+    },
+    replace: (data) => {
+      let elem = tableElem();
+      a_clean_node(elem);
+      fillTable(elem, data);
     }
   };
+}
+
+a_table.create = (id, data) => {
+  var tableElem = document.createElement("table");
+  tableElem.setAttribute("id", id);
+  fillTable(tableElem, data);
+  return tableElem;
 }
 
 export { a_table };

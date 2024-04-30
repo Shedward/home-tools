@@ -7,7 +7,7 @@ function a_form(id) {
 
   return {
     fields: () => {
-      var fieldNodes = {}; 
+      var fieldNodes = {};
       formElem().querySelectorAll('input').forEach((input) => {
         const fieldName = input.getAttribute('a.field');
         const fieldValue = input.value;

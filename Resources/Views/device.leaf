@@ -25,7 +25,9 @@
 
           let newDevice = await response.json();
 
-          a.table("all-devices-table").prependRow(
+          a.table.create("new-table");
+
+          a.table("all-devices-table").appendRow(
             newDevice.id, 
             `<td>${newDevice.name}</td>
             <td>${newDevice.address}</td>
