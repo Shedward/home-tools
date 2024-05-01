@@ -1,6 +1,10 @@
 struct VpnLeaf: Leaf {
   static let template = "vpn"
 
-  let sources: [RouterService.AddressListItem]
-  let destinations: [RouterService.AddressListItem]
+  struct AllDevices: Encodable {
+    let allDevices: [VpnDeviceFull]
+  }
+
+  let current: VpnDeviceFull?
+  let allDevices: AllDevices?
 }

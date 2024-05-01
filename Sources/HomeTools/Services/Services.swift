@@ -8,6 +8,7 @@ class Services {
     let toolsList: ToolsListService
     let router: RouterService
     let devices: DeviceService
+    let vpn: VpnService
 
     init(app: Application, configs: Configs) throws {
         self.app = app
@@ -20,6 +21,9 @@ class Services {
         )
 
         self.devices = DeviceService(db: app.db)
+        self.vpn = VpnService(db: app.db)
+
+        vpn.services = self
     }
 }
 

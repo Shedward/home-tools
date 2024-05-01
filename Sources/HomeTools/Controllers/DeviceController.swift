@@ -15,21 +15,20 @@ struct DeviceController: ToolController {
 
         let deviceApi = routes.grouped("api", "device")
         deviceApi.post(use: apiAdd)
-        deviceApi.delete(use: apiDelete)
-    }
-
-    struct IndexContent: Encodable {
-        let ip: String
-        let currentDevice: Device?
-        let allDevices: [Device]
+        deviceApi.delete(":id", use: apiDelete)
     }
 
     func index(req: Request) async throws -> View {
-        let ipAddress = req.headers["X-Real-IP"].first ?? req.remoteAddress?.ipAddress ?? "Unknown"
-        let currentDevice = try await req.services.devices.device(address: ipAddress)
+        let ipAddress = req.ipAddress()
+
+        let currentDevice: Device? = if let ipAddress {
+            try await req.services.devices.device(address: ipAddress)
+        } else {
+            nil
+        }
         let allDevices = try await req.services.devices.devices()
-        let content = IndexContent(ip: ipAddress, currentDevice: currentDevice, allDevices: allDevices)
-        return try await req.view.render("device", content)
+        let deviceLeaf = DeviceLeaf(ip: ipAddress, currentDevice: currentDevice, allDevices: allDevices)
+        return try await req.view.render(deviceLeaf)
     }
 }
 
@@ -37,29 +36,32 @@ struct DeviceController: ToolController {
 
 extension DeviceController {
 
-    struct CreateRequest: Content {
+    struct ApiCreateRequest: Content {
         let name: String
         let address: String
     }
 
+    /// Creates device
+    /// 
+    /// POST /api/device
+    /// - body: ApiCreateRequest
     func apiAdd(req: Request) async throws -> Device {
-        let createDevice = try req.content.decode(CreateRequest.self)
+        let createDevice = try req.content.decode(ApiCreateRequest.self)
         let newDevice = Device(name: createDevice.name, address: createDevice.address, mac: nil)
         return try await req.services.devices.add(newDevice)
     }
 
-    struct DeleteResponse: Content {
+    struct ApiDeleteRequestQuery: Decodable {
+        let id: UUID
     }
 
-    func apiDelete(req: Request) async throws -> DeleteResponse {
-        guard
-            let idString: String = req.query["id"],
-            let id = UUID(uuidString: idString)
-        else {
-            throw Abort(.badRequest, reason: "id is not provided")
-        }
+    /// Deletes device
+    ///
+    /// DELETE /api/device/:id
+    func apiDelete(req: Request) async throws -> EmptyContent {
+        let reqQuery = try req.query.decode(ApiDeleteRequestQuery.self)
 
-        try await req.services.devices.delete(id)
-        return DeleteResponse()
+        try await req.services.devices.delete(reqQuery.id)
+        return EmptyContent()
     }
 }

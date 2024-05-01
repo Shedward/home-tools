@@ -19,12 +19,10 @@ final class VpnDevice: Model, Content {
     var createdAt: Date?
 
     init() {
-        self.device = Device()
-        self.state = .disabled
     }
 
-    init(device: Device, state: State = .disabled) {
-        self.device = device
+    init(deviceId: Device.IDValue, state: State = .disabled) {
+        self.$device.id = deviceId
         self.state = state
     }
 }

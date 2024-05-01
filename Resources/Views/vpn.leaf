@@ -6,70 +6,15 @@
   <body>
       <main>
           <h1><a href="/">Home</a> - VPN</h1>
-
-          <h2>Статус VPN</h2>
+          <h2>Это устройство</h2>
+          #if(current):
           <dl class="horizontal">
-            <dt>Подключение</dt>
-            <dd>Включен</dd>
-            <dt>Локация</dt>
-            <dd>🇫🇮 Финляндия</dd>
-            <dt>Протокол</dt>
-            <dd>Wireguard</dd>
+            <dt>Имя</dt>
+            <dd>current.name</dd>
           </dl>
-
-          <h2>Устройства под VPN</h2>
-          <table>
-            <tr>
-              <td></td>
-              <td><input type="text"/></td>
-              <td><input type="text"/></td>
-              <td>
-                <div class="button small">+</div>
-              </td>
-            </tr>
-
-            #for(source in sources):
-            <tr>
-              <td>
-                [0|N|*]
-              </td>
-              <td>#(source.comment)</td>
-              <td>#(source.address)</td>
-              <td>
-                <div class="button small">-</div>
-              </td>
-            </tr>
-            #endfor
-          </table>
-
-          <h2>Адреса уходящие под VPN</h2>
-          <table>
-            <tr>
-              <td></td>
-              <td>
-                <input type="text"/>
-              </td>
-              <td>
-                <input type="text"/>
-              </td>
-              <td>
-                <div class="button small">+</div>
-              </td>
-            </tr>
-
-            #for(destination in destinations):
-            <tr>
-              <td>
-                <div>✅</div>
-              </td>
-              <td>#(destination.address)</td>
-              <td>#(destination.comment)</td>
-              <td>
-                <div class="button small">-</div>
-              </td>
-            </tr>
-            #endfor
-          </table>
+          #else:
+          Чтобы использовать VPN устройство нужно зарегистрировать
+          #endif
       </main>
   </body>
 </html>

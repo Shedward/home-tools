@@ -1,7 +1,7 @@
 
 import Vapor
 
-struct InternalError: DebuggableError {
+struct InternalError: DebuggableError, Codable {
     let identifier: String
     let reason: String
 

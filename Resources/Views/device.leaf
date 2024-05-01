@@ -36,8 +36,7 @@
         },
 
         deleteDevice: async (id) => {
-          let response = await a.fetch("/api/device", {
-            query: { id: id },
+          let response = await a.fetch(`/api/device/${id}`, {
             method: "DELETE"
           });
 
