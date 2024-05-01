@@ -16,7 +16,7 @@ struct EchoController: ToolController {
     }
 
     func index(req: Request) async throws -> View {
-        let headers = String(describing: req.headers)
-        return try await req.view.render("echo", ["headers": headers])
+        let echoLeaf = EchoLeaf(headers: String(describing: req.headers))
+        return try await req.view.render(echoLeaf)
     }
 }
