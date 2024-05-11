@@ -46,7 +46,6 @@ new_version="${version_parts[0]}.${version_parts[1]}.${version_parts[2]}.${versi
 
 # Replace the old version in the file
 sed -i '' "s/$current_version/$new_version/" "$FILE_PATH"
-q
 echo "Version updated from $current_version to $new_version in $FILE_PATH"
 
 git add .
