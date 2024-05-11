@@ -52,4 +52,5 @@ git add .
 git commit -m "New release v${new_version}"
 
 git tag "v${new_version}"
+git push
 git push --tags
