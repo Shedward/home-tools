@@ -51,17 +51,15 @@ extension DeviceController {
         return try await req.services.devices.add(newDevice)
     }
 
-    struct ApiDeleteRequestQuery: Decodable {
-        let id: UUID
-    }
-
     /// Deletes device
     ///
     /// DELETE /api/device/:id
     func apiDelete(req: Request) async throws -> EmptyContent {
-        let reqQuery = try req.query.decode(ApiDeleteRequestQuery.self)
+        guard let deviceId: UUID = req.parameters.get("id") else {
+            throw Abort(.internalServerError, reason: ":id not found. Expected /api/device/:id")
+        }
 
-        try await req.services.devices.delete(reqQuery.id)
+        try await req.services.devices.delete(deviceId)
         return EmptyContent()
     }
 }

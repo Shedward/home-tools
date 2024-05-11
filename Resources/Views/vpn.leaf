@@ -10,7 +10,7 @@
           #if(current):
           <dl class="horizontal">
             <dt>Имя</dt>
-            <dd>current.name</dd>
+            <dd>#(current.name)</dd>
           </dl>
           #else:
           Чтобы использовать VPN устройство нужно зарегистрировать

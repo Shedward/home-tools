@@ -19,7 +19,23 @@ final class VpnService {
         guard let device = try await services?.devices.device(address: address) else {
             return nil
         }
-        return try await VpnDevice.find(device.id, on: db)
+
+        if let existingsVpnDevice = try await VpnDevice.find(device.id, on: db) {
+            return existingsVpnDevice
+        }
+
+        let vpnDevice = try await addDevice(device)
+
+        return vpnDevice
+    }
+
+    func addDevice(_ device: Device) async throws -> VpnDevice {
+        guard let deviceId = device.id else {
+            throw InternalError("Only created device should be used to create vpn device")
+        }
+        let vpnDevice = VpnDevice(deviceId: deviceId)
+        try await vpnDevice.create(on: db)
+        return vpnDevice
     }
 
     func addDevice(_ device: VpnDevice) async throws -> VpnDevice {

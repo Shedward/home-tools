@@ -1,4 +1,5 @@
 import Vapor
+import Fluent
 
 struct VpnDeviceFull: Content {
   let id: UUID
@@ -7,14 +8,17 @@ struct VpnDeviceFull: Content {
   let state: VpnDevice.State
   let createdAt: Date?
 
-  init(vpnDevice: VpnDevice) throws {
+  init(vpnDevice: VpnDevice, on db: any Database) async throws {
     guard let id = vpnDevice.id else {
       throw InternalError("VpnDeviceFull should only be produced from created VpnDevice")
     }
 
     self.id = id
-    self.name = vpnDevice.$device.name
-    self.address = vpnDevice.device.address
+
+    let device = try await vpnDevice.$device.get(on: db)
+
+    self.name = device.name
+    self.address = device.address
     self.state = vpnDevice.state
     self.createdAt = vpnDevice.createdAt
   }

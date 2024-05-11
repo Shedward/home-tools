@@ -50,7 +50,7 @@ extension VpnController {
             return ApiCurrentDeviceResponse(device: nil)
         }
 
-        let vpnDeviceFull = try VpnDeviceFull(vpnDevice: vpnDevice)
+        let vpnDeviceFull = try await VpnDeviceFull(vpnDevice: vpnDevice, on: req.db)
         return ApiCurrentDeviceResponse(device: vpnDeviceFull)
     }
 
