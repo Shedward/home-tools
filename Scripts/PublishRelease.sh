@@ -49,5 +49,8 @@ sed -i '' "s/$current_version/$new_version/" "$FILE_PATH"
 q
 echo "Version updated from $current_version to $new_version in $FILE_PATH"
 
+git add .
+git commit -m "New release v${new_version}"
+
 git tag "v${new_version}"
 git push --tags

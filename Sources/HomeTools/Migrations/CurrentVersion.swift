@@ -1,2 +1,2 @@
 
-let currentVersion = "0.0.3.5"
+let currentVersion = "0.0.4.1"
