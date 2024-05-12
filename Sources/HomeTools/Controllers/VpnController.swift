@@ -24,6 +24,7 @@ struct VpnController: ToolController {
         return try await req.view.render(
             VpnLeaf(
                 current: current.device, 
+                availableStates: VpnDevice.State.allCases,
                 allDevices: .init(allDevices: [])
             )
         )

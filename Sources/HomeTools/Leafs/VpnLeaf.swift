@@ -6,5 +6,6 @@ struct VpnLeaf: Leaf {
   }
 
   let current: VpnDeviceFull?
+  let availableStates: [VpnDevice.State]
   let allDevices: AllDevices?
 }

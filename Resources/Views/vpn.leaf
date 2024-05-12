@@ -2,6 +2,24 @@
   <head>
     <title>Home.home</title>
     #extend("common_header")
+        <script type="module">
+      import { a } from '/scripts/main.js';
+
+      window.app = a.app({
+        onLoad: (app) => {
+          a.select("vpn-status").onSelect(async (select) => {
+            const elem = a.elem("vpn-status");
+            elem.loading(true);
+            await app.setStatus(select.value());
+            elem.loading(false);
+          });
+        },
+
+        setStatus: (newStatus) => {
+          return new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      });
+    </script>
   </head>
   <body>
       <main>
@@ -11,6 +29,14 @@
           <dl class="horizontal">
             <dt>Имя</dt>
             <dd>#(current.name)</dd>
+            <dt>Статус</dt>
+            <dd>
+              <select id="vpn-status" class="primary" value="#(current.state)">
+                #for(state in availableStates):
+                <option value="#(state)">#(state)</option>
+                #endfor
+              </select>
+            </dd>
           </dl>
           #else:
           Чтобы использовать VPN устройство нужно зарегистрировать

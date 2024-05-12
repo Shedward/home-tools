@@ -28,7 +28,7 @@ final class VpnDevice: Model, Content {
 }
 
 extension VpnDevice {
-    enum State: String, Codable {
+    enum State: String, Codable, CaseIterable {
         case disabled
         case whitelist
         case all
