@@ -218,6 +218,16 @@ td {
     padding: 0.5rem;
 }
 
+td.fit {
+    width: 0px;
+    white-space: nowrap;
+}
+
+td.fill {
+    width: 100%;
+    white-space: nowrap;
+}
+
 table {
     border: 1px solid var(--text-color-body);
 }
@@ -297,15 +307,15 @@ svg .plot-line-marker {
     background: none;
 }
 
-.button:hover {
-    border: 2px solid var(--text-underline-color-hover);
-}
-
 .small {
     font-size: 12px;
     border: 1px solid var(--text-color-body);
     padding: 0px 4px 0px 4px;
     width: min-content;
+}
+
+.button:hover {
+    border-color: var(--text-underline-color-hover);
 }
 
 input[type=text] {
@@ -336,6 +346,10 @@ select {
 
 select.primary:focus {
     outline: none;
+}
+
+.inline {
+    display: inline-block
 }
 
 .primary {

@@ -16,17 +16,29 @@ final class VpnService {
     }
 
     func device(address: String) async throws -> VpnDevice? {
-        guard let device = try await services?.devices.device(address: address) else {
+        guard 
+            let device = try await services?.devices.device(address: address),
+            let deviceId = device.id
+        else {
             return nil
         }
 
-        if let existingsVpnDevice = try await VpnDevice.find(device.id, on: db) {
+        if let existingsVpnDevice = try await VpnDevice.query(on: db).filter(\.$device.$id == deviceId).first() {
             return existingsVpnDevice
         }
 
         let vpnDevice = try await addDevice(device)
 
         return vpnDevice
+    }
+
+    func fullDevices() async throws -> [VpnDeviceFull] {
+        try await VpnDevice.query(on: db)
+            .with(\.$device)
+            .all()
+            .map { vpnDevice in
+                try VpnDeviceFull(vpnDevice: vpnDevice, device: vpnDevice.device)
+            }
     }
 
     func addDevice(_ device: Device) async throws -> VpnDevice {
@@ -40,6 +52,17 @@ final class VpnService {
 
     func addDevice(_ device: VpnDevice) async throws -> VpnDevice {
         try await device.create(on: db)
+        return device
+    }
+
+    @discardableResult
+    func setState(_ newState: VpnDevice.State, for deviceId: VpnDevice.IDValue) async throws -> VpnDevice {
+        guard let device = try await VpnDevice.find(deviceId, on: db) else {
+            throw Abort(.notFound, reason: "Device \(deviceId) not found")
+        }
+
+        device.state = newState
+        try await device.update(on: db)
         return device
     }
 }

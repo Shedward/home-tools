@@ -27,7 +27,7 @@
 
           a.table("all-devices-table").appendRow(
             newDevice.id, 
-            `<td>${newDevice.name}</td>
+            `<td class="fill">${newDevice.name}</td>
             <td>${newDevice.address}</td>
             <td style="width: 24px">
               <div class="button small" onClick="app.deleteDevice('${newDevice.id}')">-</div>
@@ -99,14 +99,15 @@
         <table id="all-devices-table">
           #for(device in allDevices):
             <tr a.id="#(device.id)">
-              <td>#(device.name)</td>
+              <td class="fill">#(device.name)</td>
               <td>#(device.address)</td>
-              <td style="width: 24px">
+              <td>
                 <div class="button small" onClick="app.deleteDevice('#(device.id)')">-</div>
               </td>
             </tr>
           #endfor
         </table>
+
       </main>
   </body>
 </html>

@@ -15,17 +15,19 @@ struct VpnController: ToolController {
 
         let apiVpn = routes.grouped("api", "vpn")
         apiVpn.get("current", use: apiCurrentDevice)
-        apiVpn.put("updateDeviceState", use: apiUpdateDeviceState)
+        apiVpn.put("deviceState", use: apiUpdateDeviceState)
     }
 
     func index(req: Request) async throws -> View {
 
         let current = try await apiCurrentDevice(req: req)
+        let allDevices = try await req.services.vpn.fullDevices()
+
         return try await req.view.render(
             VpnLeaf(
                 current: current.device, 
                 availableStates: VpnDevice.State.allCases,
-                allDevices: .init(allDevices: [])
+                allDevices: allDevices
             )
         )
     }
@@ -55,7 +57,17 @@ extension VpnController {
         return ApiCurrentDeviceResponse(device: vpnDeviceFull)
     }
 
+    struct ApiUpdateDeviceStateRequest: Content {
+        let device: VpnDevice.IDValue
+        let newState: VpnDevice.State
+    }
+
+    /// Set device status
+    /// 
+    /// PUT /api/vpn/deviceState
     func apiUpdateDeviceState(req: Request) async throws -> VpnDevice {
-        throw InternalError("Not implemented")
+        let request = try req.content.decode(ApiUpdateDeviceStateRequest.self)
+        let updatedDevice = try await req.services.vpn.setState(request.newState, for: request.device)
+        return updatedDevice
     }
 }
