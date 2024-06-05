@@ -10,27 +10,64 @@ struct VpnController: ToolController {
     )
 
     func boot(routes: any RoutesBuilder) throws {
-        let device = routes.grouped("vpn")
-        device.get(use: index)
-    }
+        let vpn = routes.grouped("vpn")
+        vpn.get(use: index)
 
-    struct IndexContent: Encodable {
-        let sources: [RouterService.AddressListItem]
-        let destinations: [RouterService.AddressListItem]
+        let apiVpn = routes.grouped("api", "vpn")
+        apiVpn.get("current", use: apiCurrentDevice)
+        apiVpn.put("deviceState", use: apiUpdateDeviceState)
     }
 
     func index(req: Request) async throws -> View {
-        let sources = try await req.services.router
-            .addressList("to_vpn_source")
-            .items()
 
-        let destinations = try await req.services.router
-            .addressList("to_vpn_destination")
-            .items()
+        let current = try await apiCurrentDevice(req: req)
+        let allDevices = try await req.services.vpn.fullDevices()
 
         return try await req.view.render(
-            "vpn",
-            IndexContent(sources: sources, destinations: destinations)
+            VpnLeaf(
+                current: current.device, 
+                availableStates: VpnDevice.State.allCases,
+                allDevices: allDevices
+            )
         )
+    }
+}
+
+// API
+
+extension VpnController {
+
+    struct ApiCurrentDeviceResponse: Content {
+        let device: VpnDeviceFull?
+    }
+
+    /// Current device vpn config
+    ///
+    /// GET /api/vpn/current
+    /// - response: ApiCurrentDeviceResponse
+    func apiCurrentDevice(req: Request) async throws -> ApiCurrentDeviceResponse {
+        guard 
+            let ipAddress = req.ipAddress(),
+            let vpnDevice = try await req.services.vpn.device(address: ipAddress)
+        else {
+            return ApiCurrentDeviceResponse(device: nil)
+        }
+
+        let vpnDeviceFull = try await VpnDeviceFull(vpnDevice: vpnDevice, on: req.db)
+        return ApiCurrentDeviceResponse(device: vpnDeviceFull)
+    }
+
+    struct ApiUpdateDeviceStateRequest: Content {
+        let device: VpnDevice.IDValue
+        let newState: VpnDevice.State
+    }
+
+    /// Set device status
+    /// 
+    /// PUT /api/vpn/deviceState
+    func apiUpdateDeviceState(req: Request) async throws -> VpnDevice {
+        let request = try req.content.decode(ApiUpdateDeviceStateRequest.self)
+        let updatedDevice = try await req.services.vpn.setState(request.newState, for: request.device)
+        return updatedDevice
     }
 }

@@ -19,8 +19,6 @@ final class VpnAddress: Model, Content {
     var createdAt: Date?
 
     init() {
-        self.host = ""
-        self.isEnabled = true
     }
 
     init(host: String, isEnabled: Bool = true) {
