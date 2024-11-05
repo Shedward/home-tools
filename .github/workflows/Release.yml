@@ -9,31 +9,29 @@ permissions:
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    
-    - name: Setup Swift
-      uses: swift-actions/setup-swift@v2
-      with:
-        swift-version: "5.10"
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Release Build
-      run: swift build -c debug
+      - name: Setup Swift
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.0.2"
 
-    - name: Make Package
-      run: Scripts/MakeReleasePackage.sh
+      - name: Release Build
+        run: swift build -c debug
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v2
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: HomeTools.tar.gz
+      - name: Make Package
+        run: Scripts/MakeReleasePackage.sh
 
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: HomeTools.tar.gz
