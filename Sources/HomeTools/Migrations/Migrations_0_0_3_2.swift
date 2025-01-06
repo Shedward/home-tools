@@ -6,7 +6,7 @@ final class Migrations_0_0_3_2: AsyncMigration {
     func prepare(on database: any Database) async throws {
         try await database.schema("vpn_device")
             .id()
-            .field("device_id", .uuid, .required, .references("device", "id"))
+            .field("device_id", .uuid, .required, .references("device", "id", onDelete: .cascade))
             .field("state", .string, .required)
             .field("created_at", .datetime)
             .create()

@@ -2,7 +2,7 @@
 import Fluent
 import Vapor
 
-final class Device: Model, Content {
+final class Device: Model, Content, @unchecked Sendable {
 
     static let schema = "device"
 
@@ -22,8 +22,6 @@ final class Device: Model, Content {
     var createdAt: Date?
 
     init() {
-        self.name = ""
-        self.address = ""
     }
 
     init(name: String, address: String, mac: String?) {

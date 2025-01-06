@@ -2,7 +2,7 @@
 import Fluent
 import Vapor
 
-final class VpnAddress: Model, Content {
+final class VpnAddress: Model, Content, @unchecked Sendable {
 
     static let schema = "vpn_address"
 
@@ -19,8 +19,6 @@ final class VpnAddress: Model, Content {
     var createdAt: Date?
 
     init() {
-        self.host = ""
-        self.isEnabled = true
     }
 
     init(host: String, isEnabled: Bool = true) {

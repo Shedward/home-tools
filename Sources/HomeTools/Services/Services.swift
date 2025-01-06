@@ -8,6 +8,7 @@ class Services {
     let toolsList: ToolsListService
     let router: RouterService
     let devices: DeviceService
+    let vpn: VpnService
 
     init(app: Application, configs: Configs) throws {
         self.app = app
@@ -20,6 +21,9 @@ class Services {
         )
 
         self.devices = DeviceService(db: app.db)
+        self.vpn = VpnService(db: app.db)
+
+        vpn.services = self
     }
 }
 
@@ -28,7 +32,7 @@ struct ServicesStorageKey: StorageKey {
 }
 
 extension Application {
-    var services: Services {
+    var services: HomeTools.Services {
         get throws {
             guard let services = storage[ServicesStorageKey.self] else {
                 throw InternalError("Services is not instantiated in Application")
@@ -38,14 +42,14 @@ extension Application {
     }
 
     @discardableResult
-    func setServices(_ services: Services) -> Self {
+    func setServices(_ services: HomeTools.Services) -> Self {
         storage[ServicesStorageKey.self] = services
         return self
     }
 }
 
 extension Request {
-    var services: Services {
+    var services: HomeTools.Services {
         get throws {
             try application.services
         }

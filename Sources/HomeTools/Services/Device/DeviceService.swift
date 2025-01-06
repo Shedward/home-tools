@@ -1,5 +1,6 @@
 
 import Fluent
+import Foundation
 
 final class DeviceService {
     private let db: any Database

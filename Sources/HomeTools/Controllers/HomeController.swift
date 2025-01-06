@@ -19,6 +19,6 @@ struct HomeController: ToolController {
             .tools()
             .filter { !$0.isPrivate }
 
-        return try await req.view.render("home", ["tools": tools])
+        return try await req.view.render(HomeLeaf(tools: tools))
     }
 }
