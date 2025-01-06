@@ -2,7 +2,7 @@
 import Fluent
 import Vapor
 
-final class VpnDevice: Model, Content {
+final class VpnDevice: Model, Content, @unchecked Sendable {
 
     static let schema = "vpn_device"
 
