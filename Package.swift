@@ -4,13 +4,13 @@ import PackageDescription
 let package = Package(
   name: "home-tools",
   platforms: [
-    .macOS(.v13)
+    .macOS(.v14)
   ],
   dependencies: [
-    .package(url: "https://github.com/vapor/vapor.git", from: "4.106.2"),
-    .package(url: "https://github.com/vapor/fluent.git", from: "4.8.0"),
+    .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
+    .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0"),
     .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.0.0"),
-    .package(url: "https://github.com/vapor/leaf.git", from: "4.4.0"),
+    .package(url: "https://github.com/vapor/leaf.git", from: "4.0.0"),
   ],
   targets: [
     .executableTarget(
