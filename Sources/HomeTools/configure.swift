@@ -6,6 +6,7 @@ import Vapor
 
 // configures your application
 public func configure(_ app: Application) async throws {
+    app.logger.info("🏠 Starting HomeTools 🏠")
 
     guard let configPath = Environment.get("HOME_TOOLS_CONFIG_PATH") else {
         throw InternalError("Config path not found in environment at HOME_TOOLS_CONFIG_PATH")
