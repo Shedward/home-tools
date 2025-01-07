@@ -21,7 +21,8 @@ extension RouterService {
 
         func items() async throws -> [AddressListItem] {
             try await service.request("/ip/firewall/address-list?list=\(name)")
-                .content.decode([AddressListItem].self)
+                .content
+                .decode([AddressListItem].self)
         }
     }
 
@@ -31,6 +32,7 @@ extension RouterService {
 
     func addressListItems() async throws -> [AddressListItem] {
         try await request("/ip/firewall/address-list")
-            .content.decode([AddressListItem].self)
+            .content
+            .decode([AddressListItem].self)
     }
 }

@@ -6,6 +6,7 @@ func toolControllers(_ app: Application) -> [any RouteCollection & ToolControlle
         HomeController(),
         DeviceController(),
         EchoController(),
+        OnlineController()
     ]
 }
 

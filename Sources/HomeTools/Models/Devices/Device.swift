@@ -13,10 +13,10 @@ final class Device: Model, Content, @unchecked Sendable {
     var name: String
 
     @Field(key: "address")
-    var address: String
+    var address: String?
 
     @Field(key: "mac")
-    var mac: String?
+    var mac: String
 
     @Timestamp(key: "created_at", on: .create)
     var createdAt: Date?
@@ -24,7 +24,7 @@ final class Device: Model, Content, @unchecked Sendable {
     init() {
     }
 
-    init(name: String, address: String, mac: String?) {
+    init(name: String, address: String?, mac: String) {
         self.name = name
         self.address = address
         self.mac = mac

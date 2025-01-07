@@ -39,6 +39,7 @@ extension DeviceController {
     struct ApiCreateRequest: Content {
         let name: String
         let address: String
+        let mac: String
     }
 
     /// Creates device
@@ -47,7 +48,7 @@ extension DeviceController {
     /// - body: ApiCreateRequest
     func apiAdd(req: Request) async throws -> Device {
         let createDevice = try req.content.decode(ApiCreateRequest.self)
-        let newDevice = Device(name: createDevice.name, address: createDevice.address, mac: nil)
+        let newDevice = Device(name: createDevice.name, address: createDevice.address, mac: createDevice.mac)
         return try await req.services.devices.add(newDevice)
     }
 
