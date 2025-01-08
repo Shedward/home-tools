@@ -18,8 +18,10 @@ struct OnlineController: ToolController {
         deviceApi.get(use: apiGet)
     }
 
-    func index(req: Request) async throws -> [RouterService.DHCPLease] {
-        try await req.services.router.dhcpLeases()
+    func index(req: Request) async throws -> View {
+        let device = try await req.services.devices.currentDevice(req)
+        let leaf = OnlineLeaf(device: device)
+        return try await req.view.render(leaf)
     }
 }
 

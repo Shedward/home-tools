@@ -1,4 +1,5 @@
 
+import Vapor
 import Fluent
 import Foundation
 
@@ -7,6 +8,13 @@ final class DeviceService {
 
     init(db: any Database) {
         self.db = db
+    }
+
+    func currentDevice(_ request: Request) async throws -> Device? {
+        guard let ipAddress = request.ipAddress() else {
+            return nil
+        }
+        return try await device(address: ipAddress)
     }
 
     func device(address: String) async throws -> Device? {

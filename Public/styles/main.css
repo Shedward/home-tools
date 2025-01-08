@@ -373,3 +373,30 @@ select.primary:focus {
     -ms-user-select: none;
     user-select: none;
 }
+
+
+.online-green {
+    fill: rgba(134, 226, 128, 1);
+    stroke: rgba(134, 226, 128, 0.7);
+    stroke-width: 1px;
+}
+
+.online-gray {
+    fill: rgba(220, 220, 220, 1);
+    stroke: rgba(220, 220, 220, 0.7);
+    stroke-width: 1px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .online-green {
+        fill: rgba(134, 226, 128, 1);
+        stroke: rgba(134, 226, 128, 0.7);
+        stroke-width: 1px;
+    }
+
+    .online-gray {
+        fill: rgba(220, 220, 220, 1);
+        stroke: rgba(220, 220, 220, 0.7);
+        stroke-width: 1px;
+    }
+}

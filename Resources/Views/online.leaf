@@ -1,0 +1,46 @@
+<html lang="en">
+  <head>
+    <title>Online.home</title>
+    #extend("common_header")
+
+    <script type="module">
+      import { a } from '/scripts/main.js';
+
+      window.app = a.app({
+        onLoad: (app) => {
+          app.reloadOnline();
+        },
+
+        reloadOnline: async () => {
+            let response = await a.fetch('/api/online', {
+                method: "GET"
+            });
+
+            const onlineResponse = await response.json();
+            const items = onlineResponse.map((o) =>
+                ({ "timestamp": new Date(o.createdAt).getTime() / 1000 })
+            );
+
+            a.hourly_grid("online_grid").fill(
+                items,
+                (items) => {
+                    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    rect.setAttribute("class", items.length > 0 ? "online-green" : "online-gray");
+
+                    const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+                    title.textContent = items.length;
+                    rect.appendChild(title);
+                    return rect;
+                }
+            );
+        },
+      });
+    </script>
+  </head>
+  <body>
+      <main>
+          <h1><a href="/">Home</a> - Online</h1>
+          <div id="online_grid"/>
+      </main>
+  </body>
+</html>
