@@ -5,7 +5,7 @@ function a_hourly_grid(id) {
     const element = a_element_selector("Hourly Grid", id);
 
     return {
-        fill: (items, cell, days = 14, cellWidth = 24, cellHeight = 12, padding = 2) => {
+        fill: (items, cell, days = 14, cellWidth = 26, cellHeight = 12, padding = 2) => {
             element().innerHTML = '';
 
             const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");

@@ -1,5 +1,6 @@
 
 import Vapor
+import Fluent
 
 struct OnlineController: ToolController {
 
@@ -16,11 +17,12 @@ struct OnlineController: ToolController {
         let deviceApi = routes.grouped("api", "online")
         deviceApi.post("probe", use: apiProbe)
         deviceApi.get(use: apiGet)
+        deviceApi.get("devices", use: apiGetDevices)
     }
 
     func index(req: Request) async throws -> View {
         let device = try await req.services.devices.currentDevice(req)
-        let leaf = OnlineLeaf(device: device)
+        let leaf = OnlineLeaf(currentDevice: device)
         return try await req.view.render(leaf)
     }
 }
@@ -60,7 +62,25 @@ extension OnlineController {
     /// - max: max count, by default 100
     func apiGet(req: Request) async throws -> [Online] {
         try await req.db.query(Online.self)
-            .limit(req.query.get(Int?.self, at: "max") ?? 100)
+            .filterOnline(req: req)
             .all()
+    }
+
+    func apiGetDevices(req: Request) async throws -> [OnlineDevice] {
+        try await req.db.query(Online.self)
+            .filterOnline(req: req)
+            .all()
+            .map { OnlineDevice(online: $0) }
+            .uniqued(on: \.mac)
+    }
+}
+
+extension QueryBuilder where Model == Online {
+    func filterOnline(req: Request) throws -> Self {
+        try self
+            .limit(req.query.get(Int?.self, at: "max") ?? 100)
+            .ifLet(req.query.get(String?.self, at: "mac")) { mac, query in
+                query.filter(\.$mac, .equal, mac)
+            }
     }
 }
