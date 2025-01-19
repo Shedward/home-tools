@@ -1,6 +1,6 @@
-
-import Vapor
 import Fluent
+import FluentSQL
+import Vapor
 
 struct OnlineController: ToolController {
 
@@ -18,6 +18,7 @@ struct OnlineController: ToolController {
         deviceApi.post("probe", use: apiProbe)
         deviceApi.get(use: apiGet)
         deviceApi.get("devices", use: apiGetDevices)
+        deviceApi.get("counters", use: apiGetOnlineCounters)
     }
 
     func index(req: Request) async throws -> View {
@@ -38,7 +39,8 @@ extension OnlineController {
     /// POST /api/online/probe
     func apiProbe(req: Request) async throws -> ApiProbeResponse {
         let leases = try await req.services.router.dhcpLeases()
-        let online = leases
+        let online =
+            leases
             .filter { $0.lastSeen?.isEmpty == false }
             .map { lease in
                 with(Online()) {
@@ -66,12 +68,40 @@ extension OnlineController {
             .all()
     }
 
+    /// Returns list of online devices uniqued by MAC
+    ///
+    /// GET /api/online/devices
     func apiGetDevices(req: Request) async throws -> [OnlineDevice] {
         try await req.db.query(Online.self)
             .filterOnline(req: req)
             .all()
             .map { OnlineDevice(online: $0) }
             .uniqued(on: \.mac)
+    }
+
+    /// Return count of online devices grouped by hour
+    ///
+    /// POST /api/online/counters
+    func apiGetOnlineCounters(req: Request) async throws -> [OnlineCounter] {
+        guard let sql = req.db as? SQLDatabase else {
+            throw InternalError("DB is not SQLDatabase")
+        }
+
+        let from = try req.query.get(String?.self, at: "from")
+        let mac = try req.query.get(String?.self, at: "mac")
+
+        let query: SQLQueryString = """
+            SELECT
+                strftime('%Y-%m-%d %H:00:00', datetime(created_at, 'unixepoch')) AS start,
+                COUNT(*) AS count
+            FROM online
+            WHERE 1 = 1
+                AND created_at <= COALESCE(\(bind: from), created_at)
+                AND mac = COALESCE(\(bind: mac), mac)
+            GROUP BY start
+            ORDER BY start
+            """
+        return try await sql.raw(query).all(decoding: OnlineCounter.self)
     }
 }
 
@@ -81,6 +111,9 @@ extension QueryBuilder where Model == Online {
             .limit(req.query.get(Int?.self, at: "max") ?? 100)
             .ifLet(req.query.get(String?.self, at: "mac")) { mac, query in
                 query.filter(\.$mac, .equal, mac)
+            }
+            .ifLet(req.query.get(Date?.self, at: "from")) { from, query in
+                query.filter(\.$createdAt, .greaterThanOrEqual, from)
             }
     }
 }

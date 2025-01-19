@@ -1,7 +1,7 @@
-import NIOSSL
 import Fluent
 import FluentSQLiteDriver
 import Leaf
+import NIOSSL
 import Vapor
 
 // configures your application
@@ -11,6 +11,13 @@ public func configure(_ app: Application) async throws {
     guard let configPath = Environment.get("HOME_TOOLS_CONFIG_PATH") else {
         throw InternalError("Config path not found in environment at HOME_TOOLS_CONFIG_PATH")
     }
+
+    let encoder = JSONEncoder()
+    encoder.dateEncodingStrategy = .secondsSince1970
+    let decoder = JSONDecoder()
+    decoder.dateDecodingStrategy = .secondsSince1970
+    ContentConfiguration.global.use(encoder: encoder, for: .json)
+    ContentConfiguration.global.use(decoder: decoder, for: .json)
 
     app.logger.info("Reading configuration from \(configPath)")
 

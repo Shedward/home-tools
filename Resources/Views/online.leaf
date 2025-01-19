@@ -8,7 +8,10 @@
 
       window.app = a.app({
         onLoad: (app) => {
-          window.app.onlineFilters = { };
+          window.app.onlineFilters = {
+              // from: Math.floor((new Date()).getTime() / 1000) - (14 * 24 * 60 * 60) // Two weeks ago
+          };
+
           a.select("online-filter")
             .onSelect((s) => { window.app.onlineFilters.mac = s.value(); app.reloadOnline(); });
           app.reloadDevices();
@@ -33,32 +36,26 @@
         },
 
         reloadOnline: async () => {
-            const response = await a.fetch('/api/online', {
+            const response = await a.fetch('/api/online/counters', {
                 method: "GET",
                 query: window.app.onlineFilters
             });
 
-            const onlineResponse = await response.json();
-            const items = onlineResponse.map((o) =>
-                ({
-                    "timestamp": new Date(o.createdAt).getTime() / 1000,
-                    "host": o.host,
-                    "address": o.address,
-                    "mac": o.mac,
-                })
-            );
+            const items = await response.json();
 
             a.hourly_grid("online_grid").fill(
                 items,
                 (items) => {
+                    const total = items.reduce((sum, current) => sum + current.count, 0);
                     const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                    rect.setAttribute("class", items.length > 0 ? "online-green" : "online-gray");
+                    rect.setAttribute("class", total > 0 ? "online-green" : "online-gray");
 
                     const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
                     title.textContent = items.length;
                     rect.appendChild(title);
                     return rect;
-                }
+                },
+                (o) => o.start,
             );
         },
       });

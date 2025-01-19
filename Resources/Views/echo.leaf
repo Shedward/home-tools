@@ -6,7 +6,6 @@
   <body>
       <main>
           <h1><a href="/">Home</a> - Echo</h1>
-          
           <h2>Headers</h2>
           <code>#(headers)</code>
       </main>

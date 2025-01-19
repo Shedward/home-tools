@@ -1,0 +1,16 @@
+// Static tasks configuration.
+//
+// Example:
+[
+  {
+    "label": "Run",
+    "env": {
+      "HOME_TOOLS_CONFIG_PATH": "/Users/shed/.hometools/config.json"
+    },
+    "command": "swift run"
+  },
+  {
+    "label": "Open",
+    "command": "open http://127.0.0.1:8080"
+  }
+]

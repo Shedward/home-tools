@@ -1,4 +1,3 @@
-
 import Vapor
 
 struct HomeController: ToolController {

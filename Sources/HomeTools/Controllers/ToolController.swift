@@ -1,4 +1,3 @@
-
 import Vapor
 
 protocol ToolController: RouteCollection {
