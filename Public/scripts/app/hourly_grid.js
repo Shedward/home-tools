@@ -12,6 +12,7 @@ function a_hourly_grid(id) {
             cellWidth = 26,
             cellHeight = 12,
             padding = 2,
+            insets = 1,
         ) => {
             element().innerHTML = "";
 
@@ -27,8 +28,8 @@ function a_hourly_grid(id) {
             const cellFullWidth = cellWidth + padding;
             const cellFullHeight = cellHeight + padding;
 
-            svg.setAttribute("width", columns * cellFullWidth - padding);
-            svg.setAttribute("height", rows * cellFullHeight - padding);
+            svg.setAttribute("width", columns * cellFullWidth + 2 * insets);
+            svg.setAttribute("height", rows * cellFullHeight + 2 * insets);
 
             const now = new Date();
             const startOfGrid = new Date(
@@ -49,8 +50,8 @@ function a_hourly_grid(id) {
                     );
 
                     const cellContent = cell(itemsInCell);
-                    const x = col * cellFullWidth;
-                    const y = row * cellFullHeight;
+                    const x = col * cellFullWidth + insets;
+                    const y = row * cellFullHeight + insets;
 
                     if (cellContent) {
                         cellContent.setAttribute("width", cellWidth);
