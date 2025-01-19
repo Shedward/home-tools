@@ -13,7 +13,14 @@
           };
 
           a.select("online-filter")
-            .onSelect((s) => { window.app.onlineFilters.mac = s.value(); app.reloadOnline(); });
+            .onSelect((s) => {
+                if (s.value() == "all") {
+                    delete window.app.onlineFilters.mac;
+                } else {
+                    window.app.onlineFilters.mac = s.value();
+                }
+                app.reloadOnline();
+            });
           app.reloadDevices();
           app.reloadOnline();
         },
@@ -31,7 +38,7 @@
             }));
 
             a.select("online-filter").setOptions(
-                [{ value: null, title: "All" }, ...options]
+                [{ value: "all", title: "All" }, ...options]
             );
         },
 
